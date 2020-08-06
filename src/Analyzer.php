@@ -19,7 +19,8 @@ function genDiff($format, $firstFilePath, $secondFilePath)
     $keysAdded = array_diff_key($secondContent, $firstContent);
     $keysUnchanged = array_intersect_assoc($firstContent, $secondContent);
     $keysMerge = array_merge($keysDeleted, $keysAdded, $keysUnchanged);
-    $KeysChanged = array_merge_recursive(array_diff_key($firstContent, $keysMerge), array_diff_key($secondContent, $keysMerge));
+    $KeysChanged =
+        array_merge_recursive(array_diff_key($firstContent, $keysMerge), array_diff_key($secondContent, $keysMerge));
 
     $result = "{\n";
     foreach ($keysUnchanged as $key => $value) {
