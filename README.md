@@ -1,5 +1,6 @@
 # gendiff
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/cb49df0283685e07fd0c/maintainability)](https://codeclimate.com/github/cryptobfund/php-project-lvl2/maintainability)
 [![PHP CI](https://github.com/cryptobfund/php-project-lvl2/workflows/PHP%20CI/badge.svg)](https://github.com/cryptobfund/php-project-lvl2/actions)
 
 
