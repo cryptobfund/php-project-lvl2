@@ -12,11 +12,16 @@
         "bin/gendiff"
     ],
     "require": {
-        "docopt/docopt": "^1.0"
+        "docopt/docopt": "^1.0",
+        "funct/funct": "^1.5"
     },
     "autoload": {
+        "psr-4": {
+            "Gendiff\\": "src"
+        },
         "files": [
-            "src/Starter.php"
+            "src/Starter.php",
+            "src/Analyzer.php"
         ]
     }
 }
