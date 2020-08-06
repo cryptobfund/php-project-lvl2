@@ -8,5 +8,15 @@
             "email": "cryptobfund@gmail.com"
         }
     ],
-    "require": {}
+    "bin": [
+        "bin/gendiff"
+    ],
+    "require": {
+        "docopt/docopt": "^1.0"
+    },
+    "autoload": {
+        "files": [
+            "src/Starter.php"
+        ]
+    }
 }
