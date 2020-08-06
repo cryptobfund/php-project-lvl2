@@ -1,0 +1,12 @@
+{
+    "name": "johnik/gendiff",
+    "description": "Hexlet php project level2",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "cryptobfund",
+            "email": "cryptobfund@gmail.com"
+        }
+    ],
+    "require": {}
+}
