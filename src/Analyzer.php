@@ -21,7 +21,11 @@ function genDiff($format, $firstFilePath, $secondFilePath)
     $keysMerge = array_merge($keysDeleted, $keysAdded, $keysUnchanged);
     $KeysChanged =
         array_merge_recursive(array_diff_key($firstContent, $keysMerge), array_diff_key($secondContent, $keysMerge));
+    return builder($keysDeleted, $keysAdded, $keysUnchanged, $KeysChanged);
+}
 
+function builder($keysDeleted, $keysAdded, $keysUnchanged, $KeysChanged)
+{
     $result = "{\n";
     foreach ($keysUnchanged as $key => $value) {
         $result = $result . "    {$key}: {$value}\n";
