@@ -7,12 +7,12 @@ function genDiff($format, $firstFilePath, $secondFilePath)
     if (file_exists($firstFilePath)) {
         $firstContent = json_decode(file_get_contents($firstFilePath), true);
     } else {
-        $firstContent = json_decode(file_get_contents(__DIR__ . '/../'), true);
+        $firstContent = json_decode(file_get_contents(__DIR__ . '/../' . $firstFilePath), true);
     }
     if (file_exists($secondFilePath)) {
         $secondContent = json_decode(file_get_contents($secondFilePath), true);
     } else {
-        $secondContent = json_decode(file_get_contents(__DIR__ . '/../'), true);
+        $secondContent = json_decode(file_get_contents(__DIR__ . '/../' . $secondFilePath), true);
     }
 
     $keysDeleted = array_diff_key($firstContent, $secondContent);
