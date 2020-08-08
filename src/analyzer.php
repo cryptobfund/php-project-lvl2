@@ -30,7 +30,10 @@ function genDiff($format, $beforeFilePath, $afterFilePath)
     $keysUnchanged = array_intersect_assoc($beforeParsedContent, $afterParseContent);
     $keysMerge = array_merge($keysDeleted, $keysAdded, $keysUnchanged);
     $KeysChanged =
-        array_merge_recursive(array_diff_key($beforeParsedContent, $keysMerge), array_diff_key($afterParseContent, $keysMerge));
+        array_merge_recursive(
+            array_diff_key($beforeParsedContent, $keysMerge),
+            array_diff_key($afterParseContent, $keysMerge)
+        );
     return builder($keysDeleted, $keysAdded, $keysUnchanged, $KeysChanged);
 }
 
