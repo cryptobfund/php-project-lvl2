@@ -16,10 +16,10 @@ function genDiff($format, $beforeFilePath, $afterFilePath)
     //} else {
     //    $afterContent = file_get_contents(__DIR__ . '/../' . $afterFilePath);
     //}
-    $dataType = pathinfo($beforeFilePath, PATHINFO_EXTENSION);
+    $type = pathinfo($beforeFilePath, PATHINFO_EXTENSION);
     try {
-        $beforeParsedContent = parse($beforeContent, $dataType);
-        $afterParseContent = parse($afterContent, $dataType);
+        $beforeParsedContent = parse($beforeContent, $type);
+        $afterParseContent = parse($afterContent, $type);
     } catch (\Exception $e) {
         echo "\n", "Program error. " , $e->getMessage(), "\n";
         exit;
