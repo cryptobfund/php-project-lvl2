@@ -17,7 +17,7 @@
         "funct/funct": "^1.5",
         "symfony/yaml": "^5.1",
         "ext-json": "*",
-        "phpunit/phpunit": "^9.3"
+        "phpunit/phpunit": "9.2"
     },
     "autoload": {
         "psr-4": {
