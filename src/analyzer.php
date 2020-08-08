@@ -19,17 +19,17 @@ function genDiff($format, $beforeFilePath, $afterFilePath)
     $type = pathinfo($beforeFilePath, PATHINFO_EXTENSION);
     try {
         $beforeParsedContent = parse($beforeContent, $type);
-        $afterParseContent = parse($afterContent, $type);
+        $afterParseContent   = parse($afterContent, $type);
     } catch (\Exception $e) {
-        echo "\n", "Program error. " , $e->getMessage(), "\n";
+        echo "\n", "Program error. ", $e->getMessage(), "\n";
         exit;
     }
 
-    $keysDeleted = array_diff_key($beforeParsedContent, $afterParseContent);
-    $keysAdded = array_diff_key($afterParseContent, $beforeParsedContent);
+    $keysDeleted   = array_diff_key($beforeParsedContent, $afterParseContent);
+    $keysAdded     = array_diff_key($afterParseContent, $beforeParsedContent);
     $keysUnchanged = array_intersect_assoc($beforeParsedContent, $afterParseContent);
-    $keysMerge = array_merge($keysDeleted, $keysAdded, $keysUnchanged);
-    $KeysChanged =
+    $keysMerge     = array_merge($keysDeleted, $keysAdded, $keysUnchanged);
+    $KeysChanged   =
         array_merge_recursive(
             array_diff_key($beforeParsedContent, $keysMerge),
             array_diff_key($afterParseContent, $keysMerge)
