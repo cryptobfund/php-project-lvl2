@@ -2,6 +2,7 @@
     "name": "johnik/gendiff",
     "description": "Hexlet php project level2",
     "license": "MIT",
+    "minimum-stability": "dev",
     "authors": [
         {
             "name": "cryptobfund",
