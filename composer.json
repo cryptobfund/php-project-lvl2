@@ -2,7 +2,6 @@
     "name": "johnik/gendiff",
     "description": "Hexlet php project level2",
     "license": "MIT",
-    "minimum-stability": "dev",
     "authors": [
         {
             "name": "cryptobfund",
@@ -17,7 +16,7 @@
         "funct/funct": "^1.5",
         "symfony/yaml": "^5.1",
         "ext-json": "*",
-        "phpunit/phpunit": "9.2"
+        "phpunit/phpunit": "^9.3"
     },
     "autoload": {
         "psr-4": {
