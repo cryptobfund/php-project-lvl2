@@ -13,7 +13,8 @@
     ],
     "require": {
         "docopt/docopt": "^1.0",
-        "funct/funct": "^1.5"
+        "funct/funct": "^1.5",
+        "symfony/yaml": "^5.1"
     },
     "autoload": {
         "psr-4": {
@@ -21,8 +22,9 @@
             "Gendiff\\Tests\\": "tests"
         },
         "files": [
-            "src/Starter.php",
-            "src/Analyzer.php"
+            "src/starter.php",
+            "src/analyzer.php",
+            "src/parsers.php"
         ]
     },
     "require-dev": {
