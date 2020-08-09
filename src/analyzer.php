@@ -3,54 +3,69 @@
 namespace Gendiff\Analyzer;
 
 use function Gendiff\Parsers\parse;
+use function Gendiff\Formaters\Pretty\builder;
+use function Gendiff\Formaters\Pretty\simpleBuilder;
 
-function genDiff($format, $beforeFilePath, $afterFilePath)
+function genDiff($beforeFilePath, $afterFilePath)
 {
-    //if (file_exists($beforeFilePath)) {
-        $beforeContent = file_get_contents($beforeFilePath);
-    //} else {
-    //    $beforeContent = file_get_contents(__DIR__ . '/../' . $beforeFilePath);
-    //}
-    //if (file_exists($afterFilePath)) {
-        $afterContent = file_get_contents($afterFilePath);
-    //} else {
-    //    $afterContent = file_get_contents(__DIR__ . '/../' . $afterFilePath);
-    //}
+    $beforeContent = file_get_contents($beforeFilePath);
+    $afterContent = file_get_contents($afterFilePath);
     $type = pathinfo($beforeFilePath, PATHINFO_EXTENSION);
     try {
         $beforeParsedContent = parse($beforeContent, $type);
-        $afterParseContent   = parse($afterContent, $type);
+        $afterParsedContent = parse($afterContent, $type);
     } catch (\Exception $e) {
         echo "\n", "Program error. ", $e->getMessage(), "\n";
         exit;
     }
-
-    $keysDeleted   = array_diff_key($beforeParsedContent, $afterParseContent);
-    $keysAdded     = array_diff_key($afterParseContent, $beforeParsedContent);
-    $keysUnchanged = array_intersect_assoc($beforeParsedContent, $afterParseContent);
-    $keysMerge     = array_merge($keysDeleted, $keysAdded, $keysUnchanged);
-    $KeysChanged   =
-        array_merge_recursive(
-            array_diff_key($beforeParsedContent, $keysMerge),
-            array_diff_key($afterParseContent, $keysMerge)
-        );
-    return builder($keysDeleted, $keysAdded, $keysUnchanged, $KeysChanged);
+    print_r(builder(astCreator($beforeParsedContent, $afterParsedContent)));
 }
 
-function builder($keysDeleted, $keysAdded, $keysUnchanged, $KeysChanged)
+function astCreator($beforeParsedContent, $afterParsedContent)
 {
-    $result = "{\n";
-    foreach ($keysUnchanged as $key => $value) {
-        $result = $result . "    {$key}: {$value}\n";
+    $keys = array_keys(array_merge($beforeParsedContent, $afterParsedContent));
+    return array_reduce($keys, function ($acc, $key) use ($beforeParsedContent, $afterParsedContent) {
+        $acc[] = typeDef($key, $beforeParsedContent, $afterParsedContent);
+        return $acc;
+    });
+}
+
+function typeDef($key, $beforeParsedContent, $afterParsedContent)
+{
+    if ($beforeParsedContent[$key] === $afterParsedContent[$key]) {
+        return [
+            'type' => "unchanged",
+            'key' => $key,
+            'value' => $beforeParsedContent[$key]
+        ];
     }
-    foreach ($keysDeleted as $key => $value) {
-        $result = $result . "  - {$key}: {$value}\n";
+    if (!array_key_exists($key, $beforeParsedContent)) {
+        return [
+            'type' => "added",
+            'key' => $key,
+            'value' => $afterParsedContent[$key]
+        ];
     }
-    foreach ($keysAdded as $key => $value) {
-        $result = $result . "  + {$key}: {$value}\n";
+    if (!array_key_exists($key, $afterParsedContent)) {
+        return [
+            'type' => "deleted",
+            'key' => $key,
+            'value' => $beforeParsedContent[$key]
+        ];
     }
-    foreach ($KeysChanged as $key => $value) {
-        $result = $result . "  - {$key}: {$value[0]}\n  + {$key}: {$value[1]}\n";
+    if ((is_array($beforeParsedContent[$key])) && (is_array($afterParsedContent[$key]))) {
+        return [
+            'type' => "parent",
+            'key' => $key,
+            'kids' => astCreator($beforeParsedContent[$key], $afterParsedContent[$key])
+        ];
     }
-    return $result . "}";
+    if ($beforeParsedContent[$key] !== $afterParsedContent[$key]) {
+        return [
+            'type' => "changed",
+            'key' => $key,
+            'beforeValue' => $beforeParsedContent[$key],
+            'afterValue' => $afterParsedContent[$key]
+        ];
+    }
 }

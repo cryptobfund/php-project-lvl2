@@ -25,7 +25,8 @@
         "files": [
             "src/starter.php",
             "src/analyzer.php",
-            "src/parsers.php"
+            "src/parsers.php",
+            "src/formaters/pretty.php"
         ]
     },
     "require-dev": {

@@ -28,9 +28,6 @@ DOC;
     $firstFilePath = $args['<firstFile>'];
     $secondFilePath = $args['<secondFile>'];
 
-    // foreach ($args as $k=>$v) {
-    //     echo $k . ': ' . json_encode($v) . PHP_EOL;
-    //}
-    print_r(genDiff($format, $firstFilePath, $secondFilePath));
+    print_r(genDiff($firstFilePath, $secondFilePath));
     print_r("\n");
 }
