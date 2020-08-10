@@ -11,25 +11,20 @@ function builder($ast, $level = 0)
     foreach ($ast as $item) {
         switch ($item['type']) {
             case 'unchanged':
-                    $result = $result .
-                        $spaces . "    {$item['key']}: " . simpleBuilder($item['value'], $level + 1) . "\n";
+                $result .= $spaces . "    {$item['key']}: " . simpleBuilder($item['value'], $level + 1) . "\n";
                 break;
             case 'added':
-                    $result = $result .
-                        $spaces . "  + {$item['key']}: " . simpleBuilder($item['value'], $level + 1) . "\n";
+                $result .= $spaces . "  + {$item['key']}: " . simpleBuilder($item['value'], $level + 1) . "\n";
                 break;
             case 'deleted':
-                    $result = $result .
-                        $spaces . "  - {$item['key']}: " . simpleBuilder($item['value'], $level + 1) . "\n";
+                $result .= $spaces . "  - {$item['key']}: " . simpleBuilder($item['value'], $level + 1) . "\n";
                 break;
             case 'changed':
-                $result = $result .
-                    $spaces . "  - {$item['key']}: {$item['beforeValue']}\n" .
+                $result .= $spaces . "  - {$item['key']}: {$item['beforeValue']}\n" .
                     $spaces . "  + {$item['key']}: {$item['afterValue']}\n";
                 break;
             case 'parent':
-                $result = $result .
-                    $spaces . "    {$item['key']}: " . builder($item['kids'], $level + 1) . "\n";
+                $result .= $spaces . "    {$item['key']}: " . builder($item['kids'], $level + 1) . "\n";
                 break;
             default:
                 echo "something wrong " . $item['type'];
@@ -42,10 +37,7 @@ function builder($ast, $level = 0)
 function simpleBuilder($item, $level = 1)
 {
     if (!is_array($item)) {
-        if (is_bool($item)) {
-            return $item === true ? 'true' : 'false';
-        }
-        return $item;
+        return is_bool($item) ? getBoolToStr($item) : $item;
     }
     $spaces = str_repeat(" ", $level * SPACES_INIT_INDENT);
     $result = "{\n";
@@ -57,4 +49,9 @@ function simpleBuilder($item, $level = 1)
         }
     }
     return $result . $spaces . "}";
+}
+
+function getBoolToStr($item)
+{
+    return $item === true ? 'true' : 'false';
 }

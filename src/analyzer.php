@@ -33,25 +33,15 @@ function astCreator($beforeParsedContent, $afterParsedContent)
 function typeDef($key, $beforeParsedContent, $afterParsedContent)
 {
     if (!array_key_exists($key, $beforeParsedContent)) {
-        return [
-            'type' => "added",
-            'key' => $key,
-            'value' => $afterParsedContent[$key]
-        ];
+        return ['type' => "added", 'key' => $key, 'value' => $afterParsedContent[$key]];
     }
     if (!array_key_exists($key, $afterParsedContent)) {
-        return [
-            'type' => "deleted",
-            'key' => $key,
-            'value' => $beforeParsedContent[$key]
-        ];
+        return ['type' => "deleted", 'key' => $key, 'value' => $beforeParsedContent[$key]];
     }
     if ((is_array($beforeParsedContent[$key])) && (is_array($afterParsedContent[$key]))) {
         return [
-            'type' => "parent",
-            'key' => $key,
-            'kids' => astCreator($beforeParsedContent[$key], $afterParsedContent[$key])
-        ];
+            'type' => "parent",'key' => $key,
+            'kids' => astCreator($beforeParsedContent[$key], $afterParsedContent[$key])];
     }
     if ($beforeParsedContent[$key] !== $afterParsedContent[$key]) {
         return [
@@ -62,10 +52,6 @@ function typeDef($key, $beforeParsedContent, $afterParsedContent)
         ];
     }
     if ($beforeParsedContent[$key] === $afterParsedContent[$key]) {
-        return [
-            'type' => "unchanged",
-            'key' => $key,
-            'value' => $beforeParsedContent[$key]
-        ];
+        return ['type' => "unchanged", 'key' => $key, 'value' => $beforeParsedContent[$key]];
     }
 }
