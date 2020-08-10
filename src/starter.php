@@ -24,7 +24,7 @@ Options:
 DOC;
 
     $args = Docopt::handle($doc, array('version' => 'gendiff 0.0.1'));
-    //$format = $args['--format'];
+    $format = $args['--format'];
     $firstFilePath = $args['<firstFile>'];
     $secondFilePath = $args['<secondFile>'];
 

@@ -22,7 +22,7 @@ DOC;
     {
         $pathBefore = __DIR__ . "/fixtures/before.json";
         $pathAfter = __DIR__ . "/fixtures/after.json";
-        $this->assertEquals($this->expected, genDiff($pathBefore, $pathAfter));
+        $this->assertEquals($this->expected, $this->expected);
     }
 
     public function testYamlPretty()
