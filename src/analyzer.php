@@ -17,7 +17,8 @@ function genDiff($beforeFilePath, $afterFilePath)
         echo "\n", "Program error. ", $e->getMessage(), "\n";
         exit;
     }
-    return builder(astCreator($beforeParsedContent, $afterParsedContent));
+    $tree = astCreator($beforeParsedContent, $afterParsedContent);
+    return builder($tree);
 }
 
 function astCreator($beforeParsedContent, $afterParsedContent)
@@ -31,7 +32,7 @@ function astCreator($beforeParsedContent, $afterParsedContent)
 
 function typeDef($key, $beforeParsedContent, $afterParsedContent)
 {
-    if ($beforeParsedContent[$key] === $afterParsedContent[$key]) {
+    if ($beforeParsedContent[$key] == $afterParsedContent[$key]) {
         return [
             'type' => "unchanged",
             'key' => $key,
