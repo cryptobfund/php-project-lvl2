@@ -18,14 +18,14 @@ class UserTest extends TestCase
 }
 DOC;
 
-    public function testJson()
+    public function testJsonPretty()
     {
         $pathBefore = __DIR__ . "/fixtures/before.json";
         $pathAfter = __DIR__ . "/fixtures/after.json";
         $this->assertEquals($this->expected, genDiff($pathBefore, $pathAfter));
     }
 
-    public function testYaml()
+    public function testYamlPretty()
     {
         $pathBefore = __DIR__ . "/fixtures/before.yaml";
         $pathAfter = __DIR__ . "/fixtures/after.yaml";
@@ -60,7 +60,7 @@ DOC;
 }
 DOC;
 
-    public function testJsonNested()
+    public function testJsonNestedPretty()
     {
         $pathBefore = __DIR__ . "/fixtures/beforeNested.json";
         $pathAfter = __DIR__ . "/fixtures/afterNested.json";
