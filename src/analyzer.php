@@ -32,7 +32,7 @@ function astCreator($beforeParsedContent, $afterParsedContent)
 
 function typeDef($key, $beforeParsedContent, $afterParsedContent)
 {
-    if ($beforeParsedContent[$key] == $afterParsedContent[$key]) {
+    if ($beforeParsedContent[$key] === $afterParsedContent[$key]) {
         return [
             'type' => "unchanged",
             'key' => $key,
