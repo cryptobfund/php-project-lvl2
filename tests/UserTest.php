@@ -11,10 +11,10 @@ class UserTest extends TestCase
     private string $expected = <<<DOC
 {
     host: hexlet.io
-  - proxy: 123.234.53.22
-  + verbose: 1
   - timeout: 50
   + timeout: 20
+  - proxy: 123.234.53.22
+  + verbose: true
 }
 DOC;
 
@@ -47,8 +47,8 @@ DOC;
         }
     }
     group1: {
-      + baz: bars
       - baz: bas
+      + baz: bars
         foo: bar
     }
   - group2: {
@@ -58,28 +58,9 @@ DOC;
         fee: 100500
     }
 }
-before.json:
-
-{
-  "common": {
-    "setting1": "Value 1",
-    "setting2": "200",
-    "setting3": true,
-    "setting6": {
-      "key": "value"
-    }
-  },
-  "group1": {
-    "baz": "bas",
-    "foo": "bar"
-  },
-  "group2": {
-    "abc": "12345"
-  }
-}
 DOC;
 
-    public function testNestedJson()
+    public function testJsonNested()
     {
         $pathBefore = __DIR__ . "/fixtures/beforeNested.json";
         $pathAfter = __DIR__ . "/fixtures/afterNested.json";

@@ -4,9 +4,8 @@ namespace Gendiff\Analyzer;
 
 use function Gendiff\Parsers\parse;
 use function Gendiff\Formaters\Pretty\builder;
-use function Gendiff\Formaters\Pretty\simpleBuilder;
 
-function genDiff($beforeFilePath, $afterFilePath)
+function genDiff($beforeFilePath, $afterFilePath) : string
 {
     $beforeContent = file_get_contents($beforeFilePath);
     $afterContent = file_get_contents($afterFilePath);
@@ -18,7 +17,7 @@ function genDiff($beforeFilePath, $afterFilePath)
         echo "\n", "Program error. ", $e->getMessage(), "\n";
         exit;
     }
-    print_r(builder(astCreator($beforeParsedContent, $afterParsedContent)));
+    return builder(astCreator($beforeParsedContent, $afterParsedContent));
 }
 
 function astCreator($beforeParsedContent, $afterParsedContent)
