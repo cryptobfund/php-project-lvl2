@@ -24,10 +24,10 @@ Options:
 DOC;
 
     $args = Docopt::handle($doc, array('version' => 'gendiff 0.0.1'));
-    $format = $args['--format'];
+    $format = (string) $args['--format'];
     $firstFilePath = $args['<firstFile>'];
     $secondFilePath = $args['<secondFile>'];
 
-    print_r(genDiff($firstFilePath, $secondFilePath));
+    print_r(genDiff($firstFilePath, $secondFilePath, $format));
     print_r("\n");
 }

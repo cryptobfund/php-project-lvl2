@@ -4,7 +4,7 @@ namespace Gendiff\Formaters\Pretty;
 
 const SPACES_INIT_INDENT = 4;
 
-function builder($ast, $level = 0)
+function builderPretty($ast, $level = 0)
 {
     $result = "{\n";
     $spaces = str_repeat(" ", $level * SPACES_INIT_INDENT);
@@ -24,7 +24,7 @@ function builder($ast, $level = 0)
                     $spaces . "  + {$item['key']}: {$item['afterValue']}\n";
                 break;
             case 'parent':
-                $result .= $spaces . "    {$item['key']}: " . builder($item['kids'], $level + 1) . "\n";
+                $result .= $spaces . "    {$item['key']}: " . builderPretty($item['kids'], $level + 1) . "\n";
                 break;
             default:
                 echo "something wrong " . $item['type'];

@@ -3,9 +3,10 @@
 namespace Gendiff\Analyzer;
 
 use function Gendiff\Parsers\parse;
-use function Gendiff\Formaters\Pretty\builder;
+use function Gendiff\Formaters\Pretty\builderPretty;
+use function Gendiff\Formaters\Plain\builderPlain;
 
-function genDiff($beforeFilePath, $afterFilePath)
+function genDiff($beforeFilePath, $afterFilePath, $format)
 {
     $beforeContent = file_get_contents($beforeFilePath);
     $afterContent = file_get_contents($afterFilePath);
@@ -18,7 +19,18 @@ function genDiff($beforeFilePath, $afterFilePath)
         exit;
     }
     $tree = astCreator($beforeParsedContent, $afterParsedContent);
-    return builder($tree);
+    return chooseBuilder($format, $tree);
+}
+function chooseBuilder($format, $tree)
+{
+    switch ($format) {
+        case "pretty":
+            return builderPretty($tree);
+        case "plain":
+            return builderPlain($tree);
+        default:
+            echo "wrong builder name";
+    }
 }
 
 function astCreator($beforeParsedContent, $afterParsedContent)

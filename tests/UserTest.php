@@ -22,14 +22,14 @@ DOC;
     {
         $pathBefore = __DIR__ . "/fixtures/before.json";
         $pathAfter = __DIR__ . "/fixtures/after.json";
-        $this->assertEquals($this->expected, genDiff($pathBefore, $pathAfter));
+        $this->assertEquals($this->expected, genDiff($pathBefore, $pathAfter, "pretty"));
     }
 
     public function testYamlPretty()
     {
         $pathBefore = __DIR__ . "/fixtures/before.yaml";
         $pathAfter = __DIR__ . "/fixtures/after.yaml";
-        $this->assertEquals($this->expected, genDiff($pathBefore, $pathAfter));
+        $this->assertEquals($this->expected, genDiff($pathBefore, $pathAfter, "pretty"));
     }
 
     private string $expectedNested = <<<DOC
@@ -64,6 +64,24 @@ DOC;
     {
         $pathBefore = __DIR__ . "/fixtures/beforeNested.json";
         $pathAfter = __DIR__ . "/fixtures/afterNested.json";
-        $this->assertEquals($this->expectedNested, genDiff($pathBefore, $pathAfter));
+        $this->assertEquals($this->expectedNested, genDiff($pathBefore, $pathAfter, 'pretty'));
+    }
+
+    private string $expectedNestedPlain = <<<DOC
+Property 'common.setting2' was removed
+Property 'common.setting6' was removed
+Property 'common.setting4' was added with value: 'blah blah'
+Property 'common.setting5' was added with value: 'complex value'
+Property 'group1.baz' was changed. From 'bas' to 'bars'
+Property 'group2' was removed
+Property 'group3' was added with value: 'complex value'
+
+DOC;
+
+    public function testJsonNestedPlain()
+    {
+        $pathBefore = __DIR__ . "/fixtures/beforeNested.json";
+        $pathAfter = __DIR__ . "/fixtures/afterNested.json";
+        $this->assertEquals($this->expectedNestedPlain, genDiff($pathBefore, $pathAfter, 'plain'));
     }
 }
