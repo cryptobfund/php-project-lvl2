@@ -18,3 +18,4 @@ composer global require johnik/gendiff
 #### "gendiff" asciinema 
 [![asciicast](https://asciinema.org/a/7f7OZTbcMlmSSWhBlLIvbMovM.svg)](https://asciinema.org/a/7f7OZTbcMlmSSWhBlLIvbMovM?speed=2&autoplay=1&size=small&theme=tango)
 [![asciicast](https://asciinema.org/a/VDqKfyxytOFE0uUvWIXTs1EYg.svg)](https://asciinema.org/a/VDqKfyxytOFE0uUvWIXTs1EYg?speed=2&autoplay=1&size=small&theme=tango)
+[![asciicast](https://asciinema.org/a/sNDG5Pu12rixUFrrdQKN0ayuK.svg)](https://asciinema.org/a/sNDG5Pu12rixUFrrdQKN0ayuK?speed=2&autoplay=1&size=small&theme=tango)
