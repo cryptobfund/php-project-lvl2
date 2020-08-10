@@ -2,6 +2,7 @@
 
 namespace Gendiff\Analyzer;
 
+use function Gendiff\Formaters\Json\builderJson;
 use function Gendiff\Parsers\parse;
 use function Gendiff\Formaters\Pretty\builderPretty;
 use function Gendiff\Formaters\Plain\builderPlain;
@@ -28,6 +29,8 @@ function chooseBuilder($format, $tree)
             return builderPretty($tree);
         case "plain":
             return builderPlain($tree);
+        case "json":
+            return builderJson($tree);
         default:
             echo "wrong builder name";
     }

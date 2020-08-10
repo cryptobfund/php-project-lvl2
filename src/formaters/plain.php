@@ -9,8 +9,7 @@ function builderPlain($ast, $level = "")
         $newLevel = strlen($level) > 0 ? "{$level}.{$item['key']}" : $item['key'];
         switch ($item['type']) {
             case 'added':
-                $result .= "Property '{$newLevel}' was added with value: '" .
-                    simpleBuilder($item['value']) . "'\n";
+                $result .= "Property '{$newLevel}' was added with value: '" . getValue($item['value']) . "'\n";
                 break;
             case 'deleted':
                 $result .= "Property '{$newLevel}' was removed\n";
@@ -32,7 +31,7 @@ function builderPlain($ast, $level = "")
     return $result;
 }
 
-function simpleBuilder($item)
+function getValue($item)
 {
     if (!is_array($item)) {
         return is_bool($item) ? getBoolToStr($item) : $item;
@@ -40,7 +39,6 @@ function simpleBuilder($item)
         return "complex value";
     }
 }
-
 function getBoolToStr($item)
 {
     return $item === true ? 'true' : 'false';
