@@ -12,6 +12,6 @@ function parse($content, $type)
         case "json":
             return json_decode($content, true);
         default:
-            throw new \Exception('Wrong parse type of file');
+            throw new \Exception('Unknown type of file ' . $type);
     }
 }

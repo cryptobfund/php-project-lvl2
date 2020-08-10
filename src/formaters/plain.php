@@ -2,33 +2,39 @@
 
 namespace Gendiff\Formaters\Plain;
 
-function builderPlain($ast, $level = "")
+function builderPlain($ast)
 {
-    $result = "";
-    foreach ($ast as $item) {
-        $newLevel = strlen($level) > 0 ? "{$level}.{$item['key']}" : $item['key'];
-        switch ($item['type']) {
-            case 'added':
-                $result .= "Property '{$newLevel}' was added with value: '" . getValue($item['value']) . "'\n";
-                break;
-            case 'deleted':
-                $result .= "Property '{$newLevel}' was removed\n";
-                break;
-            case 'changed':
-                $result .= "Property '{$newLevel}' was changed." .
-                    " From '{$item['beforeValue']}' to '{$item['afterValue']}'\n";
-                break;
-            case 'parent':
-                $result .= builderPlain($item['kids'], $newLevel) ;
-                break;
-            case 'unchanged':
-                break;
-            default:
-                echo " something wrong " . $item['type'];
-                break;
-        }
+    return builder($ast);
+}
+
+function builder($ast, $level = "")
+{
+    $plain = array_reduce($ast, function ($acc, $item) use ($level) {
+        $acc[] = getBlock($item, $level);
+        return $acc;
+    });
+    return implode("", $plain);
+}
+
+function getBlock($item, $level = "")
+{
+    $newLevel = strlen($level) > 0 ? "{$level}.{$item['key']}" : $item['key'];
+    switch ($item['type']) {
+        case 'added':
+            return "Property '{$newLevel}' was added with value: '" . getValue($item['value']) . "'\n";
+        case 'deleted':
+            return "Property '{$newLevel}' was removed\n";
+        case 'changed':
+            return "Property '{$newLevel}' was changed." .
+                " From '{$item['beforeValue']}' to '{$item['afterValue']}'\n";
+        case 'parent':
+            return builder($item['kids'], $newLevel) ;
+        case 'unchanged':
+            return '';
+        default:
+            echo " something wrong " . $item['type'];
+            break;
     }
-    return $result;
 }
 
 function getValue($item)
@@ -39,6 +45,7 @@ function getValue($item)
         return "complex value";
     }
 }
+
 function getBoolToStr($item)
 {
     return $item === true ? 'true' : 'false';

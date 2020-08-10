@@ -7,7 +7,7 @@ use function Gendiff\Parsers\parse;
 use function Gendiff\Formaters\Pretty\builderPretty;
 use function Gendiff\Formaters\Plain\builderPlain;
 
-function genDiff($beforeFilePath, $afterFilePath, $format)
+function genDiff($beforeFilePath, $afterFilePath, $format = 'pretty')
 {
     $beforeContent = file_get_contents($beforeFilePath);
     $afterContent = file_get_contents($afterFilePath);
@@ -19,8 +19,7 @@ function genDiff($beforeFilePath, $afterFilePath, $format)
         echo "\n", "Program error. ", $e->getMessage(), "\n";
         exit;
     }
-    $tree = astCreator($beforeParsedContent, $afterParsedContent);
-    return chooseBuilder($format, $tree);
+    return chooseBuilder($format, astCreator($beforeParsedContent, $afterParsedContent));
 }
 function chooseBuilder($format, $tree)
 {
