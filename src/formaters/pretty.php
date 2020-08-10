@@ -1,4 +1,5 @@
 <?php
+
 namespace Gendiff\Formaters\Pretty;
 
 const SPACES_INIT_INDENT = 4;

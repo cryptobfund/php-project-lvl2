@@ -5,7 +5,7 @@ namespace Gendiff\Analyzer;
 use function Gendiff\Parsers\parse;
 use function Gendiff\Formaters\Pretty\builder;
 
-function genDiff($beforeFilePath, $afterFilePath) : string
+function genDiff($beforeFilePath, $afterFilePath): string
 {
     $beforeContent = file_get_contents($beforeFilePath);
     $afterContent = file_get_contents($afterFilePath);
