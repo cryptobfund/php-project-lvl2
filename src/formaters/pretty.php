@@ -44,8 +44,9 @@ function getValue($item, $level = 1)
         return is_bool($item) ? getBoolToStr($item) : $item;
     }
     $spaces = str_repeat(" ", $level * SPACES_INIT_INDENT);
-    $result = array_reduce($item, function ($acc, $value) use ($level, $item, $spaces) {
-            $acc[] = $spaces . "    " . array_search($value, $item) . ": " . getValue($value, $level + 1) . "\n";
+    $keys = array_keys($item);
+    $result = array_reduce($keys, function ($acc, $key) use ($level, $item, $spaces) {
+        $acc[] = $spaces . "    " . $key . ": " . getValue($item[$key], $level + 1) . "\n";
         return $acc;
     });
     return "{\n" . implode("", $result) . $spaces . "}";
