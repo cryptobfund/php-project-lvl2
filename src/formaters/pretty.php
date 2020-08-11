@@ -20,22 +20,16 @@ function builder($ast, $level = 0)
 
 function getBlock($item, $level = 0)
 {
+    $type = ['unchanged' => '    ', 'added' => '  + ', 'deleted' => '  - ', 'parent' => '    '];
     $spaces = str_repeat(" ", $level * SPACES_INIT_INDENT);
-    switch ($item['type']) {
-        case 'unchanged':
-            return $spaces . "    {$item['key']}: " . getValue($item['value'], $level + 1) . "\n";
-        case 'added':
-            return $spaces . "  + {$item['key']}: " . getValue($item['value'], $level + 1) . "\n";
-        case 'deleted':
-            return $spaces . "  - {$item['key']}: " . getValue($item['value'], $level + 1) . "\n";
-        case 'changed':
-            return $spaces . "  - {$item['key']}: {$item['beforeValue']}\n" .
-                $spaces . "  + {$item['key']}: {$item['afterValue']}\n";
-        case 'parent':
-            return $spaces . "    {$item['key']}: {\n" . builder($item['kids'], $level + 1) . "    }\n";
-        default:
-             echo "something wrong " . $item['type'];
+    if ($item['type'] === 'parent') {
+        return $spaces . "    {$item['key']}: {\n" . builder($item['kids'], $level + 1) . "    }\n";
     }
+    if ($item['type'] === 'changed') {
+        return $spaces . "  - {$item['key']}: {$item['beforeValue']}\n" .
+            $spaces . "  + {$item['key']}: {$item['afterValue']}\n";
+    }
+    return $spaces . $type[$item['type']] . "{$item['key']}: " . getValue($item['value'], $level + 1) . "\n";
 }
 
 function getValue($item, $level = 1)
