@@ -31,7 +31,7 @@ function chooseBuilder($format, $tree)
         case "json":
             return builderJson($tree);
         default:
-            echo "wrong builder name";
+            echo "wrong format name";
     }
 }
 
