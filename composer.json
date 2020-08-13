@@ -22,12 +22,11 @@
             "Gendiff\\Tests\\": "tests"
         },
         "files": [
-            "src/starter.php",
-            "src/analyzer.php",
-            "src/parsers.php",
-            "src/formaters/pretty.php",
-            "src/formaters/plain.php",
-            "src/formaters/json.php"
+            "src/Analyzer.php",
+            "src/Parsers.php",
+            "src/Formatters/Pretty.php",
+            "src/Formatters/Plain.php",
+            "src/Formatters/Json.php"
         ]
     },
     "require-dev": {
@@ -36,6 +35,7 @@
     },
     "scripts": {
         "phpcs": "phpcs",
+        "phpcbf": "phpcbf",
         "test": "phpunit tests"
     }
 }

@@ -1,8 +1,10 @@
 <?php
 
-namespace Gendiff\Formaters\Plain;
+namespace Gendiff\Formatters\Plain;
 
-function builderPlain($ast)
+use Exception;
+
+function build($ast)
 {
     return builder($ast);
 }
@@ -10,7 +12,11 @@ function builderPlain($ast)
 function builder($ast, $level = "")
 {
     $plain = array_reduce($ast, function ($acc, $item) use ($level) {
-        $acc[] = getBlock($item, $level);
+        try {
+            $acc[] = getBlock($item, $level);
+        } catch (Exception $e) {
+            return "\n Program error. " . $e->getMessage() . "\n";
+        }
         return $acc;
     });
     return implode("", $plain);
@@ -32,8 +38,7 @@ function getBlock($item, $level = "")
         case 'unchanged':
             return '';
         default:
-            echo " something wrong " . $item['type'];
-            break;
+            throw new Exception("Unknown type: '{$item['type']}' of ast item: '{$item['key']}");
     }
 }
 

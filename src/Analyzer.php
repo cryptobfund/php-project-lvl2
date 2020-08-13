@@ -2,39 +2,16 @@
 
 namespace Gendiff\Analyzer;
 
-use function Gendiff\Formaters\Json\builderJson;
 use function Gendiff\Parsers\parse;
-use function Gendiff\Formaters\Pretty\builderPretty;
-use function Gendiff\Formaters\Plain\builderPlain;
 
 function genDiff($beforeFilePath, $afterFilePath, $format = 'pretty')
 {
-    $beforeContent = file_get_contents($beforeFilePath);
-    $afterContent = file_get_contents($afterFilePath);
-    $type = pathinfo($beforeFilePath, PATHINFO_EXTENSION);
-    try {
-        $beforeParsedContent = parse($beforeContent, $type);
-        $afterParsedContent = parse($afterContent, $type);
-    } catch (\Exception $e) {
-        echo "\n", "Program error. ", $e->getMessage(), "\n";
-        exit;
-    }
-    return chooseBuilder($format, astCreator($beforeParsedContent, $afterParsedContent));
-}
-function chooseBuilder($format, $tree)
-{
-    switch ($format) {
-        case "pretty":
-            return builderPretty($tree);
-        case "plain":
-            return builderPlain($tree);
-        case "json":
-            return builderJson($tree);
-        default:
-            echo "wrong format name";
-    }
-}
+    $getParsed = fn($filePath) => parse(file_get_contents($filePath), pathinfo($filePath, PATHINFO_EXTENSION));
+    $ast = astCreator($getParsed($beforeFilePath), $getParsed($afterFilePath));
 
+    $builder = "Gendiff\Formatters\\" . ucfirst($format) . "\build";
+    return $builder($ast);
+}
 function astCreator($beforeParsedContent, $afterParsedContent)
 {
     $keys = array_keys(array_merge($beforeParsedContent, $afterParsedContent));
@@ -65,7 +42,5 @@ function typeDef($key, $beforeParsedContent, $afterParsedContent)
             'afterValue' => $afterParsedContent[$key]
         ];
     }
-    if ($beforeParsedContent[$key] === $afterParsedContent[$key]) {
-        return ['type' => "unchanged", 'key' => $key, 'value' => $beforeParsedContent[$key]];
-    }
+    return ['type' => "unchanged", 'key' => $key, 'value' => $beforeParsedContent[$key]];
 }

@@ -9,40 +9,25 @@ use function Gendiff\Analyzer\genDiff;
 class UserTest extends TestCase
 {
     private string $path = __DIR__ . "/fixtures/";
-    private string $beforeNestedJson = __DIR__ . "/fixtures/beforeNested.json";
-    private string $afterNestedJson = __DIR__ . "/fixtures/afterNested.json";
-    private string $beforeYaml = __DIR__ . "/fixtures/before.yaml";
-    private string $afterYaml = __DIR__ . "/fixtures/after.yaml";
 
-    public function testYamlPretty()
+    /**
+     * @dataProvider genDiffProvider
+     */
+    public function testGenDiff($before, $after, $format, $expected)
     {
-        $this->assertEquals(
-            file_get_contents($this->path . "prettyFlatExpected"),
-            genDiff($this->beforeYaml, $this->afterYaml, 'pretty')
+        $this->assertStringEqualsFile(
+            $this->path . $expected,
+            genDiff($this->path . $before, $this->path . $after, $format)
         );
     }
 
-    public function testJsonNestedPretty()
+    public function genDiffProvider()
     {
-        $this->assertEquals(
-            file_get_contents($this->path . "prettyExpected"),
-            genDiff($this->beforeNestedJson, $this->afterNestedJson, 'pretty')
-        );
-    }
-
-    public function testJsonNestedPlain()
-    {
-        $this->assertEquals(
-            file_get_contents($this->path . "plainExpected"),
-            genDiff($this->beforeNestedJson, $this->afterNestedJson, 'plain')
-        );
-    }
-
-    public function testJsonNestedJson()
-    {
-        $this->assertEquals(
-            file_get_contents($this->path . "jsonExpected"),
-            genDiff($this->beforeNestedJson, $this->afterNestedJson, 'json')
-        );
+        return [
+            'testYamlPretty' => ['before.yaml', 'after.yaml', 'pretty', 'prettyFlatExpected'],
+            'testJsonNestedPretty' => ['beforeNested.json', 'afterNested.json', 'pretty', 'prettyExpected'],
+            'testJsonNestedPlain' => ['beforeNested.json', 'afterNested.json', 'plain', 'plainExpected'],
+            'testJsonNestedJson' => ['beforeNested.json', 'afterNested.json', 'json', 'jsonExpected'],
+        ];
     }
 }

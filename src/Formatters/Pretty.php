@@ -1,10 +1,10 @@
 <?php
 
-namespace Gendiff\Formaters\Pretty;
+namespace Gendiff\Formatters\Pretty;
 
 const SPACES_INIT_INDENT = 4;
 
-function builderPretty($ast)
+function build($ast)
 {
     return "{\n" . builder($ast) . "}";
 }
