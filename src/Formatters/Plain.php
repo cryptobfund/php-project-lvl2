@@ -2,24 +2,18 @@
 
 namespace Gendiff\Formatters\Plain;
 
-use Exception;
-
-function build($ast)
+function formatPlain($ast)
 {
-    return builder($ast);
+    return format($ast);
 }
 
-function builder($ast, $level = "")
+function format($ast, $level = "")
 {
     $plain = array_reduce($ast, function ($acc, $item) use ($level) {
-        try {
-            $acc[] = getBlock($item, $level);
-        } catch (Exception $e) {
-            return "\n Program error. " . $e->getMessage() . "\n";
-        }
+        $acc[] = getBlock($item, $level);
         return $acc;
     });
-    return implode("", $plain);
+    return implode("\n", array_filter($plain, fn($item) => $item !== ''));
 }
 
 function getBlock($item, $level = "")
@@ -27,31 +21,33 @@ function getBlock($item, $level = "")
     $newLevel = strlen($level) > 0 ? "{$level}.{$item['key']}" : $item['key'];
     switch ($item['type']) {
         case 'added':
-            return "Property '{$newLevel}' was added with value: '" . getValue($item['value']) . "'\n";
+            $value = getValue($item['value']);
+            return "Property '{$newLevel}' was added with value: '{$value}'";
         case 'deleted':
-            return "Property '{$newLevel}' was removed\n";
+            return "Property '{$newLevel}' was removed";
         case 'changed':
+            $beforeValue = getValue($item['beforeValue']);
+            $afterValue = getValue($item['afterValue']);
             return "Property '{$newLevel}' was changed." .
-                " From '{$item['beforeValue']}' to '{$item['afterValue']}'\n";
+                " From '{$beforeValue}' to '{$afterValue}'";
         case 'parent':
-            return builder($item['kids'], $newLevel) ;
+            return format($item['children'], $newLevel) ;
         case 'unchanged':
             return '';
         default:
-            throw new Exception("Unknown type: '{$item['type']}' of ast item: '{$item['key']}");
+            throw new \Exception("Unknown type: '{$item['type']}' of ast item: '{$item['key']}");
     }
 }
 
 function getValue($item)
 {
-    if (!is_array($item)) {
-        return is_bool($item) ? getBoolToStr($item) : $item;
-    } else {
+    if (is_array($item)) {
         return "complex value";
     }
+    return is_bool($item) ? getBoolToStr($item) : $item;
 }
 
 function getBoolToStr($item)
 {
-    return $item === true ? 'true' : 'false';
+    return $item ? 'true' : 'false';
 }

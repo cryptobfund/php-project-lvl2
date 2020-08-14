@@ -35,4 +35,5 @@ $format = (string) $args['--format'];
 $firstFilePath = $args['<firstFile>'];
 $secondFilePath = $args['<secondFile>'];
 
-print(genDiff($firstFilePath, $secondFilePath, $format) . "\n");
+print genDiff($firstFilePath, $secondFilePath, $format);
+print "\n";

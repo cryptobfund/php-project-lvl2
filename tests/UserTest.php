@@ -16,8 +16,8 @@ class UserTest extends TestCase
     public function testGenDiff($before, $after, $format, $expected)
     {
         $this->assertStringEqualsFile(
-            $this->path . $expected,
-            genDiff($this->path . $before, $this->path . $after, $format)
+            $this->getFilePath($expected),
+            genDiff($this->getFilePath($before), $this->getFilePath($after), $format)
         );
     }
 
@@ -29,5 +29,9 @@ class UserTest extends TestCase
             'testJsonNestedPlain' => ['beforeNested.json', 'afterNested.json', 'plain', 'plainExpected'],
             'testJsonNestedJson' => ['beforeNested.json', 'afterNested.json', 'json', 'jsonExpected'],
         ];
+    }
+    private function getFilePath($fileName)
+    {
+        return $this->path . $fileName;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Gendiff\Formatters\Json;
 
-function build($ast)
+function formatJson($ast)
 {
     return json_encode($ast);
 }
