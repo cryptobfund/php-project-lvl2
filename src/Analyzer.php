@@ -43,14 +43,17 @@ function astCreator($beforeParsedContent, $afterParsedContent)
 
 function typeDef($key, $beforeParsedContent, $afterParsedContent)
 {
-    $beforeKey = $beforeParsedContent[$key];
-    $afterKey = $afterParsedContent[$key];
     if (!array_key_exists($key, $beforeParsedContent)) {
+        $afterKey = $afterParsedContent[$key];
         return ['type' => "added", 'key' => $key, 'value' => $afterKey];
     }
     if (!array_key_exists($key, $afterParsedContent)) {
+        $beforeKey = $beforeParsedContent[$key];
         return ['type' => "deleted", 'key' => $key, 'value' => $beforeKey];
     }
+
+    $beforeKey = $beforeParsedContent[$key];
+    $afterKey = $afterParsedContent[$key];
     if ((is_array($beforeKey)) && (is_array($afterKey))) {
         return [
             'type' => "parent",'key' => $key,
