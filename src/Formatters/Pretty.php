@@ -3,7 +3,7 @@
 namespace Gendiff\Formatters\Pretty;
 
 const SPACES_INIT_INDENT = 4;
-const TYPES = ['unchanged' => '    ', 'added' => '  + ', 'deleted' => '  - ', 'parent' => '    '];
+const INDENTS_PER_TYPES = ['unchanged' => '    ', 'added' => '  + ', 'deleted' => '  - ', 'parent' => '    '];
 
 function formatPretty($ast)
 {
@@ -12,16 +12,16 @@ function formatPretty($ast)
 
 function format($ast, $level = 0)
 {
-    $pretty = array_reduce($ast, function ($acc, $item) use ($level) {
-        $acc[] = getBlock($item, $level);
-        return $acc;
-    });
+    $pretty = array_map(function ($item) use ($level) {
+        return getBlock($item, $level);
+    }, $ast);
     return implode("\n", $pretty);
 }
 
 function getBlock($item, $level = 0)
 {
     $spaces = str_repeat(" ", $level * SPACES_INIT_INDENT);
+    $key = $item['key'];
 
     if ($item['type'] === 'parent') {
         $children = format($item['children'], $level + 1);
@@ -29,34 +29,34 @@ function getBlock($item, $level = 0)
     }
 
     if ($item['type'] === 'changed') {
-        $beforeValue = getValue($item['beforeValue'], $level + 1);
-        $afterValue = getValue($item['afterValue'], $level + 1);
-        return "{$spaces}  - {$item['key']}: {$beforeValue}\n" .
-            "{$spaces}  + {$item['key']}: {$afterValue}";
+        $beforeValue = formatValue($item['beforeValue'], $level + 1);
+        $afterValue = formatValue($item['afterValue'], $level + 1);
+        return "{$spaces}  - {$key}: {$beforeValue}\n" .
+            "{$spaces}  + {$key}: {$afterValue}";
     }
 
-    $value = getValue($item['value'], $level + 1);
-    $type = TYPES[$item['type']];
-    return "{$spaces}{$type}{$item['key']}: {$value}";
+    $value = formatValue($item['value'], $level + 1);
+    $indent = INDENTS_PER_TYPES[$item['type']];
+    return "{$spaces}{$indent}{$key}: {$value}";
 }
 
-function getValue($item, $level = 1)
+function formatValue($value, $level = 1)
 {
-    if (is_array($item)) {
+    if (is_array($value)) {
         $spaces = str_repeat(" ", $level * SPACES_INIT_INDENT);
-        $keys = array_keys($item);
-        $result = array_reduce($keys, function ($acc, $key) use ($level, $item, $spaces) {
-            $value = getValue($item[$key], $level + 1);
-            $acc[] = "{$spaces}    {$key}: {$value}";
-            return $acc;
-        });
+        $keys = array_keys($value);
+
+        $result = array_map(function ($key) use ($level, $value, $spaces) {
+            $formatValue = formatValue($value[$key], $level + 1);
+            return "{$spaces}    {$key}: {$formatValue}";
+        }, $keys);
         $result = implode("\n", $result);
         return "{\n{$result}\n{$spaces}}";
     }
-    return is_bool($item) ? getBoolToStr($item) : $item;
+    return is_bool($value) ? getBoolToStr($value) : $value;
 }
 
-function getBoolToStr($item)
+function getBoolToStr($value)
 {
-    return $item ? 'true' : 'false';
+    return $value ? 'true' : 'false';
 }

@@ -9,25 +9,25 @@ function formatPlain($ast)
 
 function format($ast, $level = "")
 {
-    $plain = array_reduce($ast, function ($acc, $item) use ($level) {
-        $acc[] = getBlock($item, $level);
-        return $acc;
-    });
+    $plain = array_map(function ($item) use ($level) {
+        return getBlock($item, $level);
+    }, $ast);
     return implode("\n", array_filter($plain, fn($item) => $item !== ''));
 }
 
 function getBlock($item, $level = "")
 {
-    $newLevel = strlen($level) > 0 ? "{$level}.{$item['key']}" : $item['key'];
+    $key = $item['key'];
+    $newLevel = strlen($level) > 0 ? "{$level}.{$key}" : $key;
     switch ($item['type']) {
         case 'added':
-            $value = getValue($item['value']);
+            $value = formatValue($item['value']);
             return "Property '{$newLevel}' was added with value: '{$value}'";
         case 'deleted':
             return "Property '{$newLevel}' was removed";
         case 'changed':
-            $beforeValue = getValue($item['beforeValue']);
-            $afterValue = getValue($item['afterValue']);
+            $beforeValue = formatValue($item['beforeValue']);
+            $afterValue = formatValue($item['afterValue']);
             return "Property '{$newLevel}' was changed." .
                 " From '{$beforeValue}' to '{$afterValue}'";
         case 'parent':
@@ -35,19 +35,19 @@ function getBlock($item, $level = "")
         case 'unchanged':
             return '';
         default:
-            throw new \Exception("Unknown type: '{$item['type']}' of ast item: '{$item['key']}");
+            throw new \Exception("Unknown type: '{$item['type']}' of ast item: '{$key}");
     }
 }
 
-function getValue($item)
+function formatValue($value)
 {
-    if (is_array($item)) {
+    if (is_array($value)) {
         return "complex value";
     }
-    return is_bool($item) ? getBoolToStr($item) : $item;
+    return is_bool($value) ? getBoolToStr($value) : $value;
 }
 
-function getBoolToStr($item)
+function getBoolToStr($value)
 {
-    return $item ? 'true' : 'false';
+    return $value ? 'true' : 'false';
 }

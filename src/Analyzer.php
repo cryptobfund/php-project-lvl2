@@ -6,17 +6,23 @@ use function Gendiff\Parsers\parse;
 
 function genDiff($beforeFilePath, $afterFilePath, $format = 'pretty')
 {
-    $beforeContent = file_get_contents($beforeFilePath);
-    $afterContent = file_get_contents($afterFilePath);
+    $readFile = function ($filePath) {
+        if (!file_get_contents($filePath)) {
+            throw new \Exception("Can't read file: " . $filePath);
+        }
+        return file_get_contents($filePath);
+    };
+    $beforeContent = $readFile($beforeFilePath);
+    $afterContent = $readFile($afterFilePath);
     $beforeType = pathinfo($beforeFilePath, PATHINFO_EXTENSION);
     $afterType = pathinfo($afterFilePath, PATHINFO_EXTENSION);
     $beforeParsedContent = parse($beforeContent, $beforeType);
     $afterParsedContent = parse($afterContent, $afterType);
 
-    $formatter = chooseBuilder($format);
-    return $formatter(astCreator($beforeParsedContent, $afterParsedContent));
+    $formatter = chooseFormatter($format);
+    return $formatter(createAst($beforeParsedContent, $afterParsedContent));
 }
-function chooseBuilder($format)
+function chooseFormatter($format)
 {
     switch ($format) {
         case "pretty":
@@ -30,18 +36,19 @@ function chooseBuilder($format)
     }
 }
 
-function astCreator($beforeParsedContent, $afterParsedContent)
+function createAst($beforeParsedContent, $afterParsedContent)
 {
     $beforeKeys = array_keys($beforeParsedContent);
     $afterKeys = array_keys($afterParsedContent);
     $keys = array_unique(array_merge($beforeKeys, $afterKeys));
+
     return array_reduce($keys, function ($acc, $key) use ($beforeParsedContent, $afterParsedContent) {
-        $acc[] = typeDef($key, $beforeParsedContent, $afterParsedContent);
+        $acc[] = createItemOfAst($key, $beforeParsedContent, $afterParsedContent);
         return $acc;
     });
 }
 
-function typeDef($key, $beforeParsedContent, $afterParsedContent)
+function createItemOfAst($key, $beforeParsedContent, $afterParsedContent)
 {
     if (!array_key_exists($key, $beforeParsedContent)) {
         $afterValue = $afterParsedContent[$key];
@@ -54,10 +61,10 @@ function typeDef($key, $beforeParsedContent, $afterParsedContent)
 
     $beforeValue = $beforeParsedContent[$key];
     $afterValue = $afterParsedContent[$key];
-    if ((is_array($beforeValue)) && (is_array($afterValue))) {
+    if (is_array($beforeValue) && is_array($afterValue)) {
         return [
             'type' => "parent",'key' => $key,
-            'children' => astCreator($beforeValue, $afterValue)];
+            'children' => createAst($beforeValue, $afterValue)];
     }
     if ($beforeValue !== $afterValue) {
         return [
