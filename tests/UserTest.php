@@ -24,10 +24,11 @@ class UserTest extends TestCase
     public function genDiffProvider()
     {
         return [
-            'testYamlPretty' => ['before.yaml', 'after.yaml', 'pretty', 'prettyFlatExpected'],
-            'testJsonNestedPretty' => ['beforeNested.json', 'afterNested.json', 'pretty', 'prettyExpected'],
-            'testJsonNestedPlain' => ['beforeNested.json', 'afterNested.json', 'plain', 'plainExpected'],
-            'testJsonNestedJson' => ['beforeNested.json', 'afterNested.json', 'json', 'jsonExpected'],
+            'testYamlPretty' => ['before.yaml', 'after.yaml', 'pretty', 'prettyExpected'],
+            'testYmlPlain' => ['before.yml', 'after.yml', 'plain', 'plainExpected'],
+            'testJsonPretty' => ['before.json', 'after.json', 'pretty', 'prettyExpected'],
+            'testJsonPlain' => ['before.json', 'after.json', 'plain', 'plainExpected'],
+            'testJsonJson' => ['before.json', 'after.json', 'json', 'jsonExpected'],
         ];
     }
     private function getFilePath($fileName)
