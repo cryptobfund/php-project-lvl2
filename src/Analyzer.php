@@ -4,16 +4,19 @@ namespace Gendiff\Analyzer;
 
 use function Gendiff\Parsers\parse;
 
+function readFile($filePath)
+{
+    $resultOfReading = file_get_contents($filePath);
+    if (!$resultOfReading) {
+        throw new \Exception("Can't read file: " . $filePath);
+    }
+    return $resultOfReading;
+}
+
 function genDiff($beforeFilePath, $afterFilePath, $format = 'pretty')
 {
-    $readFile = function ($filePath) {
-        if (!file_get_contents($filePath)) {
-            throw new \Exception("Can't read file: " . $filePath);
-        }
-        return file_get_contents($filePath);
-    };
-    $beforeContent = $readFile($beforeFilePath);
-    $afterContent = $readFile($afterFilePath);
+    $beforeContent = readFile($beforeFilePath);
+    $afterContent = readFile($afterFilePath);
     $beforeType = pathinfo($beforeFilePath, PATHINFO_EXTENSION);
     $afterType = pathinfo($afterFilePath, PATHINFO_EXTENSION);
     $beforeParsedContent = parse($beforeContent, $beforeType);
