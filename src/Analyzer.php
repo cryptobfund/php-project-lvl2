@@ -23,10 +23,12 @@ function genDiff($beforeFilePath, $afterFilePath, $format = 'pretty')
     $afterParsedContent = parse($afterContent, $afterType);
 
     $formatter = chooseFormatter($format);
-    return $formatter(createAst($beforeParsedContent, $afterParsedContent));
+    $ast = array_values(createAst($beforeParsedContent, $afterParsedContent));
+    return $formatter($ast);
 }
 function chooseFormatter($format)
 {
+
     switch ($format) {
         case "pretty":
             return 'Gendiff\Formatters\Pretty\formatPretty';
@@ -45,10 +47,7 @@ function createAst($beforeParsedContent, $afterParsedContent)
     $afterKeys = array_keys($afterParsedContent);
     $keys = array_unique(array_merge($beforeKeys, $afterKeys));
 
-    return array_reduce($keys, function ($acc, $key) use ($beforeParsedContent, $afterParsedContent) {
-        $acc[] = createItemOfAst($key, $beforeParsedContent, $afterParsedContent);
-        return $acc;
-    });
+    return array_map(fn($key) => createItemOfAst($key, $beforeParsedContent, $afterParsedContent), $keys);
 }
 
 function createItemOfAst($key, $beforeParsedContent, $afterParsedContent)
@@ -66,8 +65,9 @@ function createItemOfAst($key, $beforeParsedContent, $afterParsedContent)
     $afterValue = $afterParsedContent[$key];
     if (is_array($beforeValue) && is_array($afterValue)) {
         return [
-            'type' => "parent",'key' => $key,
-            'children' => createAst($beforeValue, $afterValue)];
+            'type' => "parent",
+            'key' => $key,
+            'children' => array_values(createAst($beforeValue, $afterValue))];
     }
     if ($beforeValue !== $afterValue) {
         return [

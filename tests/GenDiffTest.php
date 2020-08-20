@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Gendiff\Analyzer\genDiff;
 
-class UserTest extends TestCase
+class GenDiffTest extends TestCase
 {
     private string $path = __DIR__ . "/fixtures/";
 
@@ -28,7 +28,7 @@ class UserTest extends TestCase
             'testYmlPlain' => ['before.yml', 'after.yml', 'plain', 'plainExpected'],
             'testJsonPretty' => ['before.json', 'after.json', 'pretty', 'prettyExpected'],
             'testJsonPlain' => ['before.json', 'after.json', 'plain', 'plainExpected'],
-            'testJsonJson' => ['before.json', 'after.json', 'json', 'jsonExpected'],
+            'testJsonJson' => ['before.json', 'after.json', 'json', 'jsonExpected']
         ];
     }
     private function getFilePath($fileName)

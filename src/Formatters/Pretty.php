@@ -7,10 +7,10 @@ const INDENTS_PER_TYPES = ['unchanged' => '    ', 'added' => '  + ', 'deleted' =
 
 function formatPretty($ast)
 {
-    return "{\n" . format($ast) . "\n}";
+    return "{\n" . format($ast, 0) . "\n}";
 }
 
-function format($ast, $level = 0)
+function format($ast, $level)
 {
     $pretty = array_map(function ($item) use ($level) {
         return getBlock($item, $level);
@@ -18,7 +18,7 @@ function format($ast, $level = 0)
     return implode("\n", $pretty);
 }
 
-function getBlock($item, $level = 0)
+function getBlock($item, $level)
 {
     $spaces = str_repeat(" ", $level * SPACES_INIT_INDENT);
     $key = $item['key'];

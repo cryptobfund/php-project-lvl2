@@ -4,18 +4,16 @@ namespace Gendiff\Formatters\Plain;
 
 function formatPlain($ast)
 {
-    return format($ast);
+    return format($ast, "");
 }
 
-function format($ast, $level = "")
+function format($ast, $level)
 {
-    $plain = array_map(function ($item) use ($level) {
-        return getBlock($item, $level);
-    }, $ast);
-    return implode("\n", array_filter($plain, fn($item) => $item !== ''));
+    $plain = array_map(fn ($item) => getBlock($item, $level), $ast);
+    return implode("\n", array_filter($plain, fn($item) => $item !== null));
 }
 
-function getBlock($item, $level = "")
+function getBlock($item, $level)
 {
     $key = $item['key'];
     $newLevel = strlen($level) > 0 ? "{$level}.{$key}" : $key;
@@ -33,7 +31,7 @@ function getBlock($item, $level = "")
         case 'parent':
             return format($item['children'], $newLevel) ;
         case 'unchanged':
-            return '';
+            return null;
         default:
             throw new \Exception("Unknown type: '{$item['type']}' of ast item: '{$key}");
     }
